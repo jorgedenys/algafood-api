@@ -1,5 +1,7 @@
 package com.jdsjara.algafood.api.controller.exceptionhandler;
 
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,5 +15,6 @@ public class Problem {
 	private String detail;
 	
 	private String userMessage;
+	private LocalDateTime timestamp;
 	
 }
