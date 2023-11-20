@@ -1,8 +1,9 @@
 package com.jdsjara.algafood.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.jdsjara.algafood.domain.exception.CidadeNaoEncontradaException;
@@ -35,11 +36,13 @@ public class CadastroCidadeService {
 
 	public void excluir(Long cidadeId) {
 		try {
-			cidadeRepository.deleteById(cidadeId);
-
-		} catch (EmptyResultDataAccessException e) {
-			throw new CidadeNaoEncontradaException(cidadeId);
-
+			Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
+			
+			if (cidade.isEmpty()) {
+				throw new CidadeNaoEncontradaException(cidadeId);	
+			} else {
+				cidadeRepository.delete(cidade.get());	
+			}
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, cidadeId));
 		}

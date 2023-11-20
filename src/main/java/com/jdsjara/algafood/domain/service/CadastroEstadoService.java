@@ -1,8 +1,9 @@
 package com.jdsjara.algafood.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.jdsjara.algafood.domain.exception.EntidadeEmUsoException;
@@ -25,11 +26,13 @@ public class CadastroEstadoService {
 	
 	public void excluir(Long estadoId) {
 		try {
-			estadoRepository.deleteById(estadoId);
-
-		} catch (EmptyResultDataAccessException e) {
-			throw new EstadoNaoEncontradoException(estadoId);
-
+			Optional<Estado> estado = estadoRepository.findById(estadoId);
+			
+			if (estado.isEmpty()) {
+				throw new EstadoNaoEncontradoException(estadoId);	
+			} else {
+				estadoRepository.delete(estado.get());	
+			}
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_ESTADO_EM_USO, estadoId));
 		}
