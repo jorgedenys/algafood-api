@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.jdsjara.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.EntidadeEmUsoException;
@@ -16,7 +15,7 @@ import com.jdsjara.algafood.domain.service.CadastroCozinhaService;
 import jakarta.validation.ConstraintViolationException;
 
 @SpringBootTest
-public class CadastroCozinhaIntegrationTests {
+public class CadastroCozinhaIT {
 
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
