@@ -8,7 +8,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +24,8 @@ import com.jdsjara.algafood.domain.exception.NegocioException;
 import com.jdsjara.algafood.domain.model.Restaurante;
 import com.jdsjara.algafood.domain.repository.RestauranteRepository;
 import com.jdsjara.algafood.domain.service.CadastroRestauranteService;
-import com.jdsjara.algafood.validation.Groups;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
@@ -49,8 +49,7 @@ public class RestauranteController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante adicionar(@RequestBody 
-			@Validated(Groups.CadastroRestaurante.class) Restaurante restaurante) {
+	public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
 		try {
 			return cadastroRestaurante.salvar(restaurante);	
 		} catch (EntidadeNaoEncontradaException e) {
@@ -60,7 +59,7 @@ public class RestauranteController {
 	
 	@PutMapping("/{restauranteId}")
 	public Restaurante atualizar(@PathVariable Long restauranteId,
-			@RequestBody Restaurante restaurante) {
+			@RequestBody @Valid Restaurante restaurante) {
 		Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 		
 		BeanUtils.copyProperties(restaurante, restauranteAtual, 
