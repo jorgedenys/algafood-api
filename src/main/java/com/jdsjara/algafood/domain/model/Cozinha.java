@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.jdsjara.algafood.validation.Groups;
+import com.jdsjara.algafood.core.validation.Groups;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

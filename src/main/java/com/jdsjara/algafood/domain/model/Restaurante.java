@@ -9,7 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jdsjara.algafood.validation.Groups;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.jdsjara.algafood.core.validation.Groups;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -32,6 +33,9 @@ import jakarta.validation.groups.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+// Criar uma validação a nível de classe
+//@ValorZeroIncluiDescricao(valorField = "taxaFrete", 
+//	descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
@@ -51,6 +55,7 @@ public class Restaurante {
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
+	@JsonIgnoreProperties(value = "nome", allowGetters = true)
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@NotNull

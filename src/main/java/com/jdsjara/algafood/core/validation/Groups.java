@@ -1,4 +1,4 @@
-package com.jdsjara.algafood.validation;
+package com.jdsjara.algafood.core.validation;
 
 public interface Groups {
 	
