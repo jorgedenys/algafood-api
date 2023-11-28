@@ -37,7 +37,6 @@ public class CozinhaController {
 	
 	@GetMapping
 	public List<Cozinha> listar() {
-		
 		logger.info("Consultando cozinhas.");
 		
 		return cozinhaRepository.findAll();

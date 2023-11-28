@@ -21,7 +21,7 @@ public class Problem {
 	private String detail;
 	private String userMessage;
 	private List<Field> fields;
-	
+		
 	@Getter
 	@Builder
 	public static class Field {
