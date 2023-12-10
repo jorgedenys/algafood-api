@@ -1,8 +1,10 @@
 package com.jdsjara.algafood;
 
+import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,9 @@ public class CadastroCozinhaIT {
 	@LocalServerPort
 	private int port;
 	
+	@Autowired
+	private Flyway flyway;
+	
 	@BeforeEach
 	public void setUp() {
 		// Habilita o log de qual foi a requisição e qual foi a resposta
@@ -24,6 +29,8 @@ public class CadastroCozinhaIT {
 		
 		RestAssured.basePath = "/cozinhas";
 		RestAssured.port = port;
+		
+		flyway.migrate();
 	}
 
 	@Test
@@ -46,7 +53,7 @@ public class CadastroCozinhaIT {
 		.when()
 			.get()
 		.then()
-			.body("", Matchers.hasSize(5))
+			.body("", Matchers.hasSize(4))
 			.body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
 	}
 	
