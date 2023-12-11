@@ -1,24 +1,25 @@
-create table algafood.forma_pagamento (
+create table forma_pagamento (
 	id bigint not null auto_increment,
 	descricao varchar(60) not null,
+
 	primary key (id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.grupo (
+create table grupo (
 	id bigint not null auto_increment,
 	nome varchar(60) not null,
 	
 	primary key (id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.grupo_permissao (
+create table grupo_permissao (
 	grupo_id bigint not null,
 	permissao_id bigint not null,
 	
 	primary key (grupo_id, permissao_id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.permissao (
+create table permissao (
 	id bigint not null auto_increment,
 	descricao varchar(60) not null,
 	nome varchar(100) not null,
@@ -26,7 +27,7 @@ create table algafood.permissao (
 	primary key (id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.produto (
+create table produto (
 	id bigint not null auto_increment,
 	restaurante_id bigint not null,
 	nome varchar(80) not null,
@@ -37,7 +38,7 @@ create table algafood.produto (
 	primary key (id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.restaurante (
+create table restaurante (
 	id bigint not null auto_increment,
 	cozinha_id bigint not null,
 	nome varchar(80) not null,
@@ -55,14 +56,14 @@ create table algafood.restaurante (
 	primary key (id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.restaurante_forma_pagamento (
+create table restaurante_forma_pagamento (
 	restaurante_id bigint not null,
 	forma_pagamento_id bigint not null,
 	
 	primary key (restaurante_id, forma_pagamento_id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.usuario (
+create table usuario (
 	id bigint not null auto_increment,
 	nome varchar(80) not null,
 	email varchar(255) not null,
@@ -72,36 +73,36 @@ create table algafood.usuario (
 	primary key (id)
 ) engine=InnoDB default charset=utf8;
 
-create table algafood.usuario_grupo (
+create table usuario_grupo (
 	usuario_id bigint not null,
 	grupo_id bigint not null,
 	
 	primary key (usuario_id, grupo_id)
 ) engine=InnoDB default charset=utf8;
 
-alter table algafood.grupo_permissao add constraint fk_grupo_permissao_permissao 
-foreign key (permissao_id) references algafood.permissao (id);
+alter table grupo_permissao add constraint fk_grupo_permissao_permissao
+foreign key (permissao_id) references permissao (id);
 
-alter table algafood.grupo_permissao add constraint fk_grupo_permissao_grupo 
-foreign key (grupo_id) references algafood.grupo (id);
+alter table grupo_permissao add constraint fk_grupo_permissao_grupo
+foreign key (grupo_id) references grupo (id);
 
-alter table algafood.produto add constraint fk_produto_restaurante 
-foreign key (restaurante_id) references algafood.restaurante (id);
+alter table produto add constraint fk_produto_restaurante
+foreign key (restaurante_id) references restaurante (id);
 
-alter table algafood.restaurante add constraint fk_restaurante_cozinha 
-foreign key (cozinha_id) references algafood.cozinha (id);
+alter table restaurante add constraint fk_restaurante_cozinha
+foreign key (cozinha_id) references cozinha (id);
 
-alter table algafood.restaurante add constraint fk_restaurante_cidade 
-foreign key (endereco_cidade_id) references algafood.cidade (id);
+alter table restaurante add constraint fk_restaurante_cidade
+foreign key (endereco_cidade_id) references cidade (id);
 
-alter table algafood.restaurante_forma_pagamento add constraint fk_rest_forma_pagto_forma_pagto 
-foreign key (forma_pagamento_id) references algafood.forma_pagamento (id);
+alter table restaurante_forma_pagamento add constraint fk_rest_forma_pagto_forma_pagto
+foreign key (forma_pagamento_id) references forma_pagamento (id);
 
-alter table algafood.restaurante_forma_pagamento add constraint fk_rest_forma_pagto_restaurante 
-foreign key (restaurante_id) references algafood.restaurante (id);
+alter table restaurante_forma_pagamento add constraint fk_rest_forma_pagto_restaurante
+foreign key (restaurante_id) references restaurante (id);
 
-alter table algafood.usuario_grupo add constraint fk_usuario_grupo_grupo 
-foreign key (grupo_id) references algafood.grupo (id);
+alter table usuario_grupo add constraint fk_usuario_grupo_grupo
+foreign key (grupo_id) references grupo (id);
 
-alter table algafood.usuario_grupo add constraint fk_usuario_grupo_usuario 
-foreign key (usuario_id) references algafood.usuario (id);
+alter table usuario_grupo add constraint fk_usuario_grupo_usuario
+foreign key (usuario_id) references usuario (id);
