@@ -2,7 +2,6 @@ package com.jdsjara.algafood.api.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +58,10 @@ public class RestauranteController {
 	public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
 			Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
-			return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
+			
+			restaurante = cadastroRestaurante.salvar(restaurante);
+			
+			return restauranteModelAssembler.toModel(restaurante);
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
@@ -67,13 +69,15 @@ public class RestauranteController {
 	
 	@PutMapping("/{restauranteId}")
 	public RestauranteModel atualizar(@PathVariable Long restauranteId,
-			@RequestBody @Valid RestauranteInput restauranteInput) {
+									  @RequestBody @Valid RestauranteInput restauranteInput) {
 		try {
 			Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 			
 			restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 			
-			return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restauranteAtual));
+			restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
+			
+			return restauranteModelAssembler.toModel(restauranteAtual);
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
