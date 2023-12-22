@@ -46,6 +46,8 @@ public class CadastroCidadeService {
 			} else {
 				cidadeRepository.delete(cidade.get());	
 			}
+			
+			cidadeRepository.flush();
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, cidadeId));
 		}
