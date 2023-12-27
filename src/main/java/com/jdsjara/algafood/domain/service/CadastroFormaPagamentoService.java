@@ -5,13 +5,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.jdsjara.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.EntidadeEmUsoException;
 import com.jdsjara.algafood.domain.exception.FormaPagamentoNaoEncontradaException;
-import com.jdsjara.algafood.domain.model.Cidade;
 import com.jdsjara.algafood.domain.model.FormaPagamento;
 import com.jdsjara.algafood.domain.repository.FormaPagamentoRepository;
 
