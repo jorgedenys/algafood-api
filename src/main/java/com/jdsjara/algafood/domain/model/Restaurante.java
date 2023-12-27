@@ -47,6 +47,8 @@ public class Restaurante {
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
+	private Boolean ativo = Boolean.TRUE;
+	
 	//@Valid
 	//@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	//@NotNull
@@ -74,5 +76,13 @@ public class Restaurante {
 	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")	
 	private List<Produto> produtos = new ArrayList<>();
+	
+	public void ativar() {
+		setAtivo(true);
+	}
+	
+	public void inativar() {
+		setAtivo(false);
+	}
 	
 }
