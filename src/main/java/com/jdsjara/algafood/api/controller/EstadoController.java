@@ -46,8 +46,10 @@ public class EstadoController {
 	}
 	
 	@GetMapping("/{estadoId}")
-	public Estado buscar(@PathVariable Long estadoId) {
-		return cadastroEstado.buscarOuFalhar(estadoId);
+	public EstadoModel buscar(@PathVariable Long estadoId) {
+		Estado estado = cadastroEstado.buscarOuFalhar(estadoId); 
+		
+		return estadoModelAssembler.toModel(estado);
 	}
 	
 	@PostMapping

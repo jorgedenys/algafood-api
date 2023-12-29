@@ -18,6 +18,7 @@ import com.jdsjara.algafood.api.assembler.RestauranteInputDisassembler;
 import com.jdsjara.algafood.api.assembler.RestauranteModelAssembler;
 import com.jdsjara.algafood.api.model.RestauranteModel;
 import com.jdsjara.algafood.api.model.input.RestauranteInput;
+import com.jdsjara.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.NegocioException;
 import com.jdsjara.algafood.domain.model.Restaurante;
@@ -63,7 +64,7 @@ public class RestauranteController {
 			restaurante = cadastroRestaurante.salvar(restaurante);
 			
 			return restauranteModelAssembler.toModel(restaurante);
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
@@ -79,7 +80,7 @@ public class RestauranteController {
 			restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
 			
 			return restauranteModelAssembler.toModel(restauranteAtual);
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}

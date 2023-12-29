@@ -20,6 +20,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<modelmapper.version>3.0.0</modelmapper.version>
+		<spring-fox.version>2.9.2</spring-fox.version>
 		<logback-ext-loggly>0.1.5</logback-ext-loggly>		
 	</properties>
 	
