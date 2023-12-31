@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,9 +30,11 @@ public class Usuario {
 	private String nome;
 	
 	@Column(nullable = false)
+	private String email;
+	
+	@Column(nullable = false)
 	private String senha;
 	
-	@JsonIgnore
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataCadastro;
@@ -44,5 +44,9 @@ public class Usuario {
 			joinColumns = @JoinColumn(name = "usuario_id"),
 			inverseJoinColumns = @JoinColumn(name = "grupo_id"))
 	private List<Grupo> grupos = new ArrayList<>();
+	
+	public boolean senhaCoincideCom(String senha) {
+		return getSenha().equals(senha);
+	}
 	
 }
