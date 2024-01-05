@@ -40,20 +40,16 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	// o @NotBlank irá verificar que não pode ser NULO, VAZIO e ter espaços EM BRANCO
-	//@NotBlank
 	@Column(nullable = false)
 	private String nome;
 	
-	//@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 	
 	private Boolean ativo = Boolean.TRUE;
 	
-	//@Valid
-	//@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
-	//@NotNull
+	private Boolean aberto = Boolean.FALSE;
+	
 	@ManyToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
@@ -85,6 +81,14 @@ public class Restaurante {
 	
 	public void inativar() {
 		setAtivo(false);
+	}
+	
+	public void abrir() {
+	    setAberto(true);
+	}
+
+	public void fechar() {
+	    setAberto(false);
 	}
 	
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
