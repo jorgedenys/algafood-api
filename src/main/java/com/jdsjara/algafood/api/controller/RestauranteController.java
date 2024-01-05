@@ -48,6 +48,8 @@ public class RestauranteController {
 		return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
 	}
 	
+// ENDPOINTS DE EXEMPLOS QUANDO UTILIZAR O @JsonView do Jackson
+	
 //	@GetMapping
 //	public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
 //		List<Restaurante> restaurantes = restauranteRepository.findAll();
