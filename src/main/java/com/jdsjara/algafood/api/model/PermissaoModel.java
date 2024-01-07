@@ -1,16 +1,14 @@
 package com.jdsjara.algafood.api.model;
 
-import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class GrupoModel {
+public class PermissaoModel {
 	
 	private Long id;
 	private String nome;
-	private Set<PermissaoModel> permissoes;
+	private String descricao;
 		
 }
