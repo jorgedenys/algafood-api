@@ -1,6 +1,8 @@
 
 package com.jdsjara.algafood.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +63,20 @@ public class CadastroRestauranteService {
 		// gerenciado pelo contexto de persistência do Spring será
 		// atualizado automaticamente por ele.
 		restauranteAtual.inativar();
+	}
+	
+	@Transactional
+	public void ativar(List<Long> restauranteIds) {
+		// outra forma de implementar
+		// restauranteIds.forEach(this::ativar);
+		restauranteIds.forEach(restauranteId -> ativar(restauranteId));
+	}
+	
+	@Transactional
+	public void inativar(List<Long> restauranteIds) {
+		// outra forma de implementar
+		// restauranteIds.forEach(restauranteId -> inativar(restauranteId));
+		restauranteIds.forEach(this::inativar);
 	}
 	
 	@Transactional

@@ -21,6 +21,7 @@ import com.jdsjara.algafood.api.model.input.RestauranteInput;
 import com.jdsjara.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.NegocioException;
+import com.jdsjara.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.jdsjara.algafood.domain.model.Restaurante;
 import com.jdsjara.algafood.domain.repository.RestauranteRepository;
 import com.jdsjara.algafood.domain.service.CadastroRestauranteService;
@@ -129,6 +130,30 @@ public class RestauranteController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void inativar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.inativar(restauranteId);
+	}
+	
+	@PutMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+		// Se ocorrer erro de Restaurante não encontrado para este método
+		// O ideal é que retorne um HttpStatus 400 - Bad Request
+		try {
+			cadastroRestaurante.ativar(restauranteIds);	
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+	}
+	
+	@DeleteMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+		// Se ocorrer erro de Restaurante não encontrado para este método
+		// O ideal é que retorne um HttpStatus 400 - Bad Request
+		try {
+			cadastroRestaurante.inativar(restauranteIds);	
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
 	}
 	
 	@PutMapping("/{restauranteId}/abertura")
