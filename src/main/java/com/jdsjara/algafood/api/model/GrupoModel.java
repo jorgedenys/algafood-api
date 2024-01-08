@@ -1,7 +1,5 @@
 package com.jdsjara.algafood.api.model;
 
-import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +9,5 @@ public class GrupoModel {
 	
 	private Long id;
 	private String nome;
-	private Set<PermissaoModel> permissoes;
-		
+
 }
