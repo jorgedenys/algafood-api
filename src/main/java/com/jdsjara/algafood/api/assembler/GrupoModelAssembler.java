@@ -1,7 +1,7 @@
 package com.jdsjara.algafood.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -13,7 +13,7 @@ import com.jdsjara.algafood.domain.model.Grupo;
 
 @Component
 public class GrupoModelAssembler {
-	
+	  
 	@Autowired
 	private ModelMapper modelMapper;
 	
@@ -21,13 +21,7 @@ public class GrupoModelAssembler {
 		return modelMapper.map(grupo, GrupoModel.class);
 	}
 	
-	public Set<GrupoModel> toCollectionModel(Set<Grupo> grupos) {
-		return grupos.stream()
-				.map(grupo -> toModel(grupo))
-				.collect(Collectors.toSet());
-	}
-	
-	public List<GrupoModel> toCollectionModel(List<Grupo> grupos) {
+	public List<GrupoModel> toCollectionModel(Collection<Grupo> grupos) {
 		return grupos.stream()
 				.map(grupo -> toModel(grupo))
 				.collect(Collectors.toList());

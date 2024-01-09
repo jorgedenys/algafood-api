@@ -1,6 +1,6 @@
 package com.jdsjara.algafood.api.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class GrupoPermissaoController {
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public Set<PermissaoModel> listar(@PathVariable Long grupoId) {
+	public List<PermissaoModel> listar(@PathVariable Long grupoId) {
 		Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 		
 		return permissaoModelAssembler.toCollectionModel(grupo.getPermissoes());

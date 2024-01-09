@@ -1,6 +1,7 @@
 package com.jdsjara.algafood.api.assembler;
 
-import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -20,10 +21,10 @@ public class PermissaoModelAssembler {
 		return modelMapper.map(permissao, PermissaoModel.class);		
 	}
 	
-	public Set<PermissaoModel> toCollectionModel(Set<Permissao> permissoes) {
+	public List<PermissaoModel> toCollectionModel(Collection<Permissao> permissoes) {
 		return permissoes.stream()
 				.map(permissao -> toModel(permissao))
-				.collect(Collectors.toSet());
+				.collect(Collectors.toList());
 	}
 	
 }

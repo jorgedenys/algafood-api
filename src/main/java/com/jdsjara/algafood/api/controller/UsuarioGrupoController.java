@@ -1,6 +1,6 @@
 package com.jdsjara.algafood.api.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class UsuarioGrupoController {
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public Set<GrupoModel> listar(@PathVariable Long usuarioId) {
+	public List<GrupoModel> listar(@PathVariable Long usuarioId) {
 		Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
 		
 		return grupoResumoModelAssembler.toCollectionModel(usuario.getGrupos());
