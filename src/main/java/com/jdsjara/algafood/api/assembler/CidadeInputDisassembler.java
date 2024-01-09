@@ -10,7 +10,6 @@ import com.jdsjara.algafood.domain.model.Estado;
 
 @Component
 public class CidadeInputDisassembler {
-
 	
 	@Autowired
 	private ModelMapper modelMapper;
