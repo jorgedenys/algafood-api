@@ -12,6 +12,7 @@ import com.jdsjara.algafood.domain.model.Cidade;
 import com.jdsjara.algafood.domain.model.Cozinha;
 import com.jdsjara.algafood.domain.model.FormaPagamento;
 import com.jdsjara.algafood.domain.model.Restaurante;
+import com.jdsjara.algafood.domain.model.Usuario;
 import com.jdsjara.algafood.domain.repository.RestauranteRepository;
 
 @Service
@@ -28,6 +29,9 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CadastroFormaPagamentoService cadastroFormaPagamento;
+	
+	@Autowired
+	private CadastroUsuarioService cadastroUsuario;
 	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -112,6 +116,22 @@ public class CadastroRestauranteService {
 		Restaurante restaurante = buscarOuFalhar(restauranteId);
 		
 		restaurante.abrir();
+	}
+
+	@Transactional
+	public void associarResponsavel(Long restauranteId, Long responsavelId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = cadastroUsuario.buscarOuFalhar(responsavelId);
+		
+		restaurante.adicionarResponsavel(usuario);
+	}
+
+	@Transactional
+	public void desassociarResponsavel(Long restauranteId, Long responsavelId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = cadastroUsuario.buscarOuFalhar(responsavelId);
+		
+		restaurante.removerResponsavel(usuario);
 	}
 	
 }
