@@ -12,6 +12,8 @@ import com.jdsjara.algafood.domain.enums.StatusPedido;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,7 +50,9 @@ public class Pedido {
 	private OffsetDateTime dataCancelamento;
 	private OffsetDateTime dataEntrega;
 	
-	private StatusPedido status;
+	// Anotação que determina como esse Enum será gravado no banco de dados
+	@Enumerated(EnumType.STRING)
+	private StatusPedido status = StatusPedido.CRIADO;
 	
 	@Embedded
 	private Endereco enderecoEntrega;
@@ -67,5 +71,21 @@ public class Pedido {
 	
 	@OneToMany(mappedBy = "pedido")
 	private List<ItemPedido> itens = new ArrayList<>();
+	
+	public void calcularValorTotal() {
+		this.subtotal = getItens().stream()
+	        .map(item -> item.getPrecoTotal())
+	        .reduce(BigDecimal.ZERO, BigDecimal::add);
+	    
+	    this.valorTotal = this.subtotal.add(this.taxaFrete);
+	}
+
+	public void definirFrete() {
+	    setTaxaFrete(getRestaurante().getTaxaFrete());
+	}
+
+	public void atribuirPedidoAosItens() {
+	    getItens().forEach(item -> item.setPedido(this));
+	}
 	
 }

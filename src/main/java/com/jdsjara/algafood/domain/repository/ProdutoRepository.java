@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jdsjara.algafood.domain.model.Produto;
 import com.jdsjara.algafood.domain.model.Restaurante;
+
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 	
