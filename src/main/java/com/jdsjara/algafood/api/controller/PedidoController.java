@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jdsjara.algafood.api.assembler.PedidoModelAssembler;
+import com.jdsjara.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.jdsjara.algafood.api.model.PedidoModel;
+import com.jdsjara.algafood.api.model.PedidoResumoModel;
 import com.jdsjara.algafood.domain.model.Pedido;
 import com.jdsjara.algafood.domain.repository.PedidoRepository;
 import com.jdsjara.algafood.domain.service.EmissaoPedidoService;
@@ -29,12 +31,15 @@ public class PedidoController {
 	@Autowired
 	private PedidoModelAssembler pedidoModelAssembler;
 	
+	@Autowired
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<PedidoModel> listar() {
+	public List<PedidoResumoModel> listar() {
 		List<Pedido> pedidos = pedidoRepository.findAll();
 		
-		return pedidoModelAssembler.toCollectionModel(pedidos);
+		return pedidoResumoModelAssembler.toCollectionModel(pedidos);
 	}
 	
 	@GetMapping("{pedidoId}")
