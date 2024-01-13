@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import com.jdsjara.algafood.domain.enums.StatusPedido;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -70,23 +71,18 @@ public class Pedido {
 	@JoinColumn(name = "usuario_cliente_id", nullable = false)
 	private Usuario cliente;
 	
-	@OneToMany(mappedBy = "pedido")
+	// CascadeType.ALL: Para salvar um Pedido e os itens do pedido em cascata
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
 	private List<ItemPedido> itens = new ArrayList<>();
 	
 	public void calcularValorTotal() {
-		this.subtotal = getItens().stream()
+	    getItens().forEach(ItemPedido::calcularPrecoTotal);
+	    
+	    this.subtotal = getItens().stream()
 	        .map(item -> item.getPrecoTotal())
 	        .reduce(BigDecimal.ZERO, BigDecimal::add);
 	    
 	    this.valorTotal = this.subtotal.add(this.taxaFrete);
 	}
 
-	public void definirFrete() {
-	    setTaxaFrete(getRestaurante().getTaxaFrete());
-	}
-
-	public void atribuirPedidoAosItens() {
-	    getItens().forEach(item -> item.setPedido(this));
-	}
-	
 }
