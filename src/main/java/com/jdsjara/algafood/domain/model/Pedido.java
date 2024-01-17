@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.jdsjara.algafood.domain.enums.StatusPedido;
+import com.jdsjara.algafood.domain.exception.NegocioException;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -84,5 +85,32 @@ public class Pedido {
 	    
 	    this.valorTotal = this.subtotal.add(this.taxaFrete);
 	}
-
+	
+	public void confirmar() {
+		setStatus(StatusPedido.CONFIRMADO);
+		setDataConfirmacao(OffsetDateTime.now());
+	}
+	
+	public void entregar() {
+		setStatus(StatusPedido.ENTREGUE);
+		setDataEntrega(OffsetDateTime.now());
+	}
+	
+	public void cancelar() {
+		setStatus(StatusPedido.CANCELADO);
+		setDataCancelamento(OffsetDateTime.now());
+	}
+	
+	private void setStatus(StatusPedido novoStatus) {
+		if (!getStatus().podeAlterarPara(novoStatus)) {
+			throw new NegocioException(
+					String.format("Status do pedido %d não pode ser alterado de %s para %s",
+							getId(),
+							getStatus().getDescricao(), 
+							novoStatus.getDescricao()));
+		}
+		
+		this.status = novoStatus;
+	}
+	
 }
