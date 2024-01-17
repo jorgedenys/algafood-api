@@ -44,12 +44,28 @@ public class RestauranteProdutoController {
 	@Autowired
 	private CadastroRestauranteService cadastroRestauranteService;
 	
+//	@GetMapping
+//	public List<ProdutoModel> listar(@PathVariable Long restauranteId,
+//			@RequestParam(required = false) boolean incluirInativos) {
+//		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+//		
+//		List<Produto> todosProdutos = null;
+//		
+//		if (incluirInativos) {
+//			todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
+//		} else {
+//			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+//		}
+//		
+//		return produtoModelAssembler.toCollectionModel(todosProdutos);
+//	}
+	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<ProdutoModel> listar(@PathVariable Long restauranteId) {
 		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 		
-		List<Produto> produtos = produtoRepository.findByRestaurante(restaurante);
+		List<Produto> produtos = produtoRepository.findAtivosByRestaurante(restaurante);
 		
 		return produtoModelAssembler.toCollectionModel(produtos);
 	}
