@@ -36,10 +36,10 @@ public class EmissaoPedidoService {
 	@Autowired
 	private CadastroProdutoService cadastroProduto;
 	
-	public Pedido buscarOuFalhar(Long pedidoId) {
+	public Pedido buscarOuFalhar(String codigo) {
 		return pedidoRepository
-				.findById(pedidoId)
-				.orElseThrow(() -> new PedidoNaoEncontradoException(pedidoId));
+				.findByCodigo(codigo)
+				.orElseThrow(() -> new PedidoNaoEncontradoException(codigo));
 	}
 
 	@Transactional

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -23,6 +24,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,6 +37,8 @@ public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String codigo;
 	
 	@Column(nullable = false)
 	private BigDecimal subtotal;
@@ -104,13 +108,20 @@ public class Pedido {
 	private void setStatus(StatusPedido novoStatus) {
 		if (!getStatus().podeAlterarPara(novoStatus)) {
 			throw new NegocioException(
-					String.format("Status do pedido %d não pode ser alterado de %s para %s",
-							getId(),
+					String.format("Status do pedido %s não pode ser alterado de %s para %s",
+							getCodigo(),
 							getStatus().getDescricao(), 
 							novoStatus.getDescricao()));
 		}
 		
 		this.status = novoStatus;
+	}
+	
+	// MÉTODO DE CALLBACK DO JPA.
+	// ANTES DE PERSISTIR PEDIDO, O JPA IRÁ EXECUTAR ESSE MÉTODO.	
+	@PrePersist
+	private void gerarCodigoUUID() {
+		this.setCodigo(UUID.randomUUID().toString());
 	}
 	
 }
