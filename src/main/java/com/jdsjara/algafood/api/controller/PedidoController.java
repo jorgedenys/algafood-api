@@ -23,7 +23,9 @@ import com.jdsjara.algafood.domain.exception.NegocioException;
 import com.jdsjara.algafood.domain.model.Pedido;
 import com.jdsjara.algafood.domain.model.Usuario;
 import com.jdsjara.algafood.domain.repository.PedidoRepository;
+import com.jdsjara.algafood.domain.repository.filter.PedidoFilter;
 import com.jdsjara.algafood.domain.service.EmissaoPedidoService;
+import com.jdsjara.algafood.infrastructure.repository.spec.PedidoSpecs;
 
 import jakarta.validation.Valid;
 
@@ -48,8 +50,8 @@ public class PedidoController {
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<PedidoResumoModel> listar() {
-		List<Pedido> pedidos = pedidoRepository.findAll();
+	public List<PedidoResumoModel> pesquisar(PedidoFilter filtro) {
+		List<Pedido> pedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
 		
 		return pedidoResumoModelAssembler.toCollectionModel(pedidos);
 	}
