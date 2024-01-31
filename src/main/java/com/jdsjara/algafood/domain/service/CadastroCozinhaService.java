@@ -37,6 +37,7 @@ public class CadastroCozinhaService {
 				cozinhaRepository.delete(cozinha.get());	
 			}
 			
+			// Método para descarregar todas as mudanças pendentes no banco de dados
 			cozinhaRepository.flush();
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_COZINHA_EM_USO, cozinhaId));

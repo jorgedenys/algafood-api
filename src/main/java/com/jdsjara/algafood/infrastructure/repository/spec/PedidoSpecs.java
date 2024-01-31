@@ -15,8 +15,12 @@ public class PedidoSpecs {
 		
 		return (root, query, builder) -> {
 			
-			root.fetch("restaurante").fetch("cozinha");
-			root.fetch("cliente");
+			// Se o que estiver retornando for PEDIDO, faz o FETCH
+			// Se não for um PEDIDO, não faz o FETCH
+			if (Pedido.class.equals(query.getResultType())) {
+				root.fetch("restaurante").fetch("cozinha");
+				root.fetch("cliente");	
+			}
 			
 			var predicates = new ArrayList<Predicate>();
 			
