@@ -1,6 +1,7 @@
 package com.jdsjara.algafood.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import com.jdsjara.algafood.api.assembler.PedidoResumoModelAssembler;
 import com.jdsjara.algafood.api.model.PedidoModel;
 import com.jdsjara.algafood.api.model.PedidoResumoModel;
 import com.jdsjara.algafood.api.model.input.PedidoInput;
+import com.jdsjara.algafood.core.data.PageableTranslator;
 import com.jdsjara.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.NegocioException;
 import com.jdsjara.algafood.domain.model.Pedido;
@@ -56,6 +58,9 @@ public class PedidoController {
 	@ResponseStatus(HttpStatus.OK)
 	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, 
 			@PageableDefault(size = 10) Pageable pageable) {
+		
+		// Método criado para ser um conversor de propriedades de ordenação
+		pageable = traduzirPageable(pageable);
 		
 		// É preciso passar um argumento PAGEABLE para retornar um objeto Paginado
 		Page<Pedido> pedidosPage = pedidoRepository.findAll(
@@ -96,6 +101,17 @@ public class PedidoController {
 	    } catch (EntidadeNaoEncontradaException e) {
 	    	throw new NegocioException(e.getMessage(), e);
 	    }
+	}
+	
+	private Pageable traduzirPageable(Pageable apiPageable) {
+		var mapeamento = Map.of(
+				"codigo", "codigo",
+				"restaurante.nome", "restaurante.nome",
+				"nomeCliente", "cliente.nome",
+				"valorTotal", "valorTotal"
+				);
+		
+		return PageableTranslator.translate(apiPageable, mapeamento);
 	}
 	
 }
