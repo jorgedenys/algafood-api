@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.jdsjara.algafood.domain.filter.PedidoFilter;
 import com.jdsjara.algafood.domain.model.Pedido;
-import com.jdsjara.algafood.domain.repository.filter.PedidoFilter;
 
 import jakarta.persistence.criteria.Predicate;
 

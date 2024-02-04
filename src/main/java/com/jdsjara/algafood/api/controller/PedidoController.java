@@ -26,10 +26,10 @@ import com.jdsjara.algafood.api.model.input.PedidoInput;
 import com.jdsjara.algafood.core.data.PageableTranslator;
 import com.jdsjara.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.jdsjara.algafood.domain.exception.NegocioException;
+import com.jdsjara.algafood.domain.filter.PedidoFilter;
 import com.jdsjara.algafood.domain.model.Pedido;
 import com.jdsjara.algafood.domain.model.Usuario;
 import com.jdsjara.algafood.domain.repository.PedidoRepository;
-import com.jdsjara.algafood.domain.repository.filter.PedidoFilter;
 import com.jdsjara.algafood.domain.service.EmissaoPedidoService;
 import com.jdsjara.algafood.infrastructure.repository.spec.PedidoSpecs;
 
