@@ -1,10 +1,12 @@
 package com.jdsjara.algafood.infrastructure.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.jdsjara.algafood.domain.enums.StatusPedido;
 import com.jdsjara.algafood.domain.filter.VendaDiariaFilter;
 import com.jdsjara.algafood.domain.model.Pedido;
 import com.jdsjara.algafood.domain.model.dto.VendaDiaria;
@@ -12,6 +14,7 @@ import com.jdsjara.algafood.domain.service.VendaQueryService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.Predicate;
 
 @Repository
 public class VendaQueryServiceImpl implements VendaQueryService {
@@ -22,46 +25,68 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 	@Override
 	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro) {
 		
-		// Obtem uma instância de CriteriaBuilder que é utilizado para
-		// obter query, predicates, função de agregação...
+		// Obtem uma instância de CriteriaBuilder - utilizado para obter query,
+		// predicates, função de agregação
 		var builder = entityManager.getCriteriaBuilder();
 		
-		// CriteriaQuery - é o tipo que o método retorna
-		// cria um CriteriaBuilder que retorna um tipo especificado
-		// Quando executar a consulta, o que espera de retorno dessa
-		// consulta será VendaDiaria
+		// Criação de uma Lista de Predicates (predicados) para os filtros
+		var predicates = new ArrayList<Predicate>();
+		
+		// CriteriaQuery - é o tipo que o método retorna. cria um CriteriaBuilder
+		// que retorna um tipo especificado. Quando executar a consulta, 
+		// o que espera de retorno dessaconsulta será VendaDiaria.
 		var query = builder.createQuery(VendaDiaria.class);
 		
 		// Define a entidade que será usada na cláusula FROM
 		var root = query.from(Pedido.class);
 		
-		// FUNCTION - Vai criar uma expressão para executar
-		// uma função no banco de dados. Ou seja, irá executar
-		// a função DATE do banco de dados
+		// FUNCTION - Vai criar uma expressão para executar uma função no banco de dados.
+		// Ou seja, irá executar a função DATE do banco de dados
 		var functionDateDataCriacao = builder.function(
 				"date", // Função que será executada no BD - date
 				LocalDate.class, // Define o tipo do resultado esperado por essa função
 				root.get("dataCriacao") // Argumento da função date - Própria data de criação
 				);
 		
-		// Define as colunas que serão retornadas na consulta
-		// Construa VendaDiaria a partir de selection
-		// para cada linha retornada pela consulta será criado um VendaDiaria
+		// Define as colunas que serão retornadas na consulta.
+		// Construirá VendaDiaria a partir da selection
 		var selection = builder.construct(VendaDiaria.class, 
 				functionDateDataCriacao, // Função para a data
 				builder.count(root.get("id")), // COUNT no ID do Pedido
 				builder.sum(root.get("valorTotal")) // SUM no valorTotal do Pedido
 				);
 		
-		// Executa o select de acordo com a projeção (selection)
-		// que será informado. Especifica o que será selecionado
+		// Executa o select de acordo com a projeção (selection) específica informada
 		query.select(selection);
+		
+		// Filtros da consulta
+		if (filtro.getRestauranteId() != null) {
+			predicates.add(builder.equal(
+					root.get("restaurante").get("id"), filtro.getRestauranteId()));
+		}
+
+		if(filtro.getDataCriacaoInicio() != null) {
+			predicates.add(builder.greaterThanOrEqualTo(
+					root.get("dataCriacao"), filtro.getDataCriacaoInicio()));
+		}
+		
+		if(filtro.getDataCriacaoFim() != null) {
+			predicates.add(builder.lessThanOrEqualTo(
+					root.get("dataCriacao"), filtro.getDataCriacaoFim()));
+		}
+		
+		// Consulta deverá trazer apenas pedidos com Status CONFIRMADO E ENTREGUE
+		// Para essa condição foi utilizado o CriteriaBuilder - IN Expression
+		predicates.add(root.get("status").in(StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));
+				
+		// Adicionamos os predicates na consulta
+		query.where(predicates.toArray(new Predicate[0]));
 		
 		// Agrupa a consulta por Data
 		query.groupBy(functionDateDataCriacao);
 		
 		// getResultList() - retorna uma lista de VendaDiaria.
-		// Especificado acima por builder.createQuery(VendaDiaria.class);
+		// Especificado acima através do builder.createQuery(VendaDiaria.class);
 		return entityManager.createQuery(query).getResultList();
 	}
 	
