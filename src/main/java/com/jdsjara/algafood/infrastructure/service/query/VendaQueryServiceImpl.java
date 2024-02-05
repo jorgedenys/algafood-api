@@ -1,4 +1,4 @@
-package com.jdsjara.algafood.infrastructure.service;
+package com.jdsjara.algafood.infrastructure.service.query;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
