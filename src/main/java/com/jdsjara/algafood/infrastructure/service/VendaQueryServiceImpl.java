@@ -23,7 +23,8 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 	private EntityManager entityManager;
 		
 	@Override
-	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro) {
+	public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro, 
+			String timeOffset) {
 		
 		// Obtem uma instância de CriteriaBuilder - utilizado para obter query,
 		// predicates, função de agregação
@@ -41,11 +42,21 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 		var root = query.from(Pedido.class);
 		
 		// FUNCTION - Vai criar uma expressão para executar uma função no banco de dados.
+		// Ou seja, irá executar a função CONVERT_TZ (Timezone) do banco de dados.
+		var functionConvertTzDataCriacao = builder.function(
+				"convert_tz",
+				LocalDate.class,
+				root.get("dataCriacao"),
+				builder.literal("+00:00"),
+				builder.literal(timeOffset));
+		
+		// FUNCTION - Vai criar uma expressão para executar uma função no banco de dados.
 		// Ou seja, irá executar a função DATE do banco de dados
 		var functionDateDataCriacao = builder.function(
 				"date", // Função que será executada no BD - date
 				LocalDate.class, // Define o tipo do resultado esperado por essa função
 				root.get("dataCriacao") // Argumento da função date - Própria data de criação
+				//functionConvertTzDataCriacao // Argumento da função date - Timezone
 				);
 		
 		// Define as colunas que serão retornadas na consulta.
