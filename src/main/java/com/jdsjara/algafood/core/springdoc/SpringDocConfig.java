@@ -24,8 +24,8 @@ public class SpringDocConfig {
 						)
 				)
 				.externalDocs(new ExternalDocumentation()
-						.description("Documentação Externa: AlgaWorks")
-						.url("https://algaworks.com")
+						.description("Documentação Externa: Página Inicial (SpringDoc)")
+						.url("http://localhost:8080/swagger-ui/index.html")
 				);
 	}
 	
