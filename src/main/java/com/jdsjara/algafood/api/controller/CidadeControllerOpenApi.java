@@ -30,7 +30,7 @@ public interface CidadeControllerOpenApi {
 	@Operation(summary = "Atualizar uma cidade")
 	CidadeModel atualizar(@Parameter(description = "Id de uma cidade", example = "1",
 		required = true) Long cidadeId,
-			@RequestBody(description = "Representação de uma nova cidade", 
+			@RequestBody(description = "Representação de uma cidade com dados atualizados", 
 		required = true) CidadeInput cidadeInput);
 	
 	@Operation(summary = "Excluir uma cidade")
