@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import com.jdsjara.algafood.domain.enums.StatusPedido;
 import com.jdsjara.algafood.domain.exception.NegocioException;
@@ -29,9 +30,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 	
 	@EqualsAndHashCode.Include
 	@Id
@@ -93,6 +94,11 @@ public class Pedido {
 	public void confirmar() {
 		setStatus(StatusPedido.CONFIRMADO);
 		setDataConfirmacao(OffsetDateTime.now());
+		
+		// Registrar um evento com todos os detalhes deste pedido atual.
+		// Ao confirmar o pedido esse evento será acionado
+		//PedidoConfirmadoEvent pedidoConfirmadoEvent = new PedidoConfirmadoEvent(this);
+		//registerEvent(pedidoConfirmadoEvent);)
 	}
 	
 	public void entregar() {

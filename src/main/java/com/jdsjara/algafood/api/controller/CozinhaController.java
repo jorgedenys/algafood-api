@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jdsjara.algafood.api.assembler.CozinhaInputDisassembler;
 import com.jdsjara.algafood.api.assembler.CozinhaModelAssembler;
+import com.jdsjara.algafood.api.controller.openapi.CozinhaControllerOpenApi;
 import com.jdsjara.algafood.api.model.CozinhaModel;
 import com.jdsjara.algafood.api.model.input.CozinhaInput;
 import com.jdsjara.algafood.domain.model.Cozinha;
@@ -32,7 +33,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApi {
 
 	private static final Logger logger = LoggerFactory.getLogger(CozinhaController.class);
 	

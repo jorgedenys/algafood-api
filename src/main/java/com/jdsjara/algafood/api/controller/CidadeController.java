@@ -3,6 +3,8 @@ package com.jdsjara.algafood.api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jdsjara.algafood.api.ResourceUriHelper;
 import com.jdsjara.algafood.api.assembler.CidadeInputDisassembler;
 import com.jdsjara.algafood.api.assembler.CidadeModelAssembler;
+import com.jdsjara.algafood.api.controller.openapi.CidadeControllerOpenApi;
 import com.jdsjara.algafood.api.model.CidadeModel;
 import com.jdsjara.algafood.api.model.input.CidadeInput;
 import com.jdsjara.algafood.domain.exception.EstadoNaoEncontradoException;
@@ -44,15 +47,52 @@ public class CidadeController implements CidadeControllerOpenApi {
 	private CidadeInputDisassembler cidadeInputDisassembler;
 	
 	@GetMapping
-	public List<CidadeModel> listar() {
-		return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
+	public CollectionModel<CidadeModel> listar() {
+		List<Cidade> cidades = cidadeRepository.findAll();
+		
+		List<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(cidades);
+		
+		cidadesModel.forEach(cidadeModel -> {
+			// Comentado devido a problema com o método methodOn
+			//cidadeModel.add(WebMvcLinkBuilder.linkTo(methodOn(CidadeController.class).buscar(cidadeModel.getId())).withSelfRel());
+		
+			//cidadeModel.add(WebMvcLinkBuilder.linkTo(methodOn(CidadeController.class).listar()).withRel("cidades"));
+		
+			//cidadeModel.getEstado().add(WebMvcLinkBuilder.linkTo(methodOn(EstadoController.class).buscar(cidadeModel.getEstado().getId())).withSelfRel());
+		});
+		
+		CollectionModel<CidadeModel> cidadesCollectionModel = CollectionModel.of(cidadesModel);
+		
+		cidadesCollectionModel.add(
+				WebMvcLinkBuilder.linkTo(CidadeController.class).withSelfRel());
+		
+		return cidadesCollectionModel;
 	}
 	
 	@GetMapping("/{cidadeId}")
 	public CidadeModel buscar(@PathVariable Long cidadeId) {
 		Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 		
-		return cidadeModelAssembler.toModel(cidade);
+		CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidade); 
+		
+		// HATEOAS
+		// Id da cidade
+		// Estático
+		//cidadeModel.add(Link.of("http://localhost:8080/cidades/1"));
+		//cidadeModel.add(Link.of("http://localhost:8080/cidades/1", IanaLinkRelations.SELF));
+		// Construindo links dinâmicos com WebMvcLinkBuilder
+		//cidadeModel.add(WebMvcLinkBuilder.linkTo(CidadeController.class).slash(cidadeModel.getId()).withSelfRel());
+		
+		// Todas as cidades
+		//cidadeModel.add(Link.of("http://localhost:8080/cidades", "cidades"));
+		//cidadeModel.add(Link.of("http://localhost:8080/cidades", IanaLinkRelations.COLLECTION));
+		//cidadeModel.add(WebMvcLinkBuilder.linkTo(CidadeController.class).withRel("cidades"));
+		
+		// Estado da cidade
+		//cidadeModel.getEstado().add(Link.of("http://localhost:8080/estados/1"));
+		//cidadeModel.getEstado().add(WebMvcLinkBuilder.linkTo(EstadoController.class).slash(cidadeModel.getEstado().getId()).withSelfRel());
+		
+		return cidadeModel;
 	}
 
 	@PostMapping

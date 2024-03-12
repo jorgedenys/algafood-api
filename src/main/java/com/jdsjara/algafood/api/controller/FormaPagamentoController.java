@@ -1,9 +1,12 @@
 package com.jdsjara.algafood.api.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,7 @@ import com.jdsjara.algafood.api.assembler.FormaPagamentoModelAssembler;
 import com.jdsjara.algafood.api.model.FormaPagamentoModel;
 import com.jdsjara.algafood.api.model.input.FormaPagamentoInput;
 import com.jdsjara.algafood.domain.model.FormaPagamento;
+import com.jdsjara.algafood.domain.repository.FormaPagamentoRepository;
 import com.jdsjara.algafood.domain.service.CadastroFormaPagamentoService;
 
 import jakarta.validation.Valid;
@@ -36,12 +40,22 @@ public class FormaPagamentoController {
 	@Autowired
 	private FormaPagamentoInputDisassembler formaPagamentoInputDisassembler;
 	
+	@Autowired
+	private FormaPagamentoRepository formaPagamentoRepository;
+	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<FormaPagamentoModel> listar() {
-		List<FormaPagamento> formasPagamentos = cadastroFormaPagamento.listar();
+	public ResponseEntity<List<FormaPagamentoModel>> listar() {
+		List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
 		
-		return formaPagamentoModelAssembler.toCollectionModel(formasPagamentos); 
+		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoModelAssembler
+				.toCollectionModel(todasFormasPagamentos);
+		
+		// Habilitando o cache com o cabeçalho Cache-Control e a diretiva max-age
+		// Pode testar com uma extensão de browser TALEND API TESTER
+		return ResponseEntity.ok()
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				.body(formasPagamentosModel);
 	}
 	
 	@GetMapping("/{formaPagamentoId}")

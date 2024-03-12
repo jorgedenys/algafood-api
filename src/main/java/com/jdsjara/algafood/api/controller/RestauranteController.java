@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jdsjara.algafood.api.assembler.RestauranteInputDisassembler;
 import com.jdsjara.algafood.api.assembler.RestauranteModelAssembler;
+import com.jdsjara.algafood.api.controller.openapi.RestauranteControllerOpenApi;
 import com.jdsjara.algafood.api.model.RestauranteModel;
 import com.jdsjara.algafood.api.model.input.RestauranteInput;
 import com.jdsjara.algafood.domain.exception.CidadeNaoEncontradaException;
@@ -30,7 +31,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
-public class RestauranteController {
+public class RestauranteController implements RestauranteControllerOpenApi {
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
@@ -167,5 +168,5 @@ public class RestauranteController {
 	public void fechamento(@PathVariable Long restauranteId) {
 		cadastroRestaurante.fechamento(restauranteId);
 	}
-	
+
 }
