@@ -66,7 +66,7 @@ public class SpringDocConfig {
     }
 
     @Bean
-    public OpenApiCustomizer openApiCustomiser() {
+    public OpenApiCustomizer openApiCustomizer() {
         return openApi -> {
             openApi.getPaths()
                     .values()

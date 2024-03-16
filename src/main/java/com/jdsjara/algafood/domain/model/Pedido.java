@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import com.jdsjara.algafood.domain.enums.StatusPedido;
+import com.jdsjara.algafood.domain.event.PedidoConfirmadoEvent;
 import com.jdsjara.algafood.domain.exception.NegocioException;
 
 import jakarta.persistence.CascadeType;
@@ -95,10 +96,13 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
 		setStatus(StatusPedido.CONFIRMADO);
 		setDataConfirmacao(OffsetDateTime.now());
 		
-		// Registrar um evento com todos os detalhes deste pedido atual.
-		// Ao confirmar o pedido esse evento será acionado
-		//PedidoConfirmadoEvent pedidoConfirmadoEvent = new PedidoConfirmadoEvent(this);
-		//registerEvent(pedidoConfirmadoEvent);)
+		// Método é para registrar um evento que deve ser publicado, disparado quando
+		// o objeto pedido for confirmado. Ao confirmar o pedido esse evento será acionado.
+		// Deverá ser passado a instância do evento que aconteceu com todas as informações
+		// relevantes desse evento.
+		// Aqui estamos registrando um evento que deve ser disparado assim que o objeto 
+		// dessa entidade Pedido for Salvo no repositório.
+		registerEvent(new PedidoConfirmadoEvent(this));
 	}
 	
 	public void entregar() {

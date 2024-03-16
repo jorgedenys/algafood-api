@@ -1,5 +1,6 @@
 package com.jdsjara.algafood.api.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import com.jdsjara.algafood.api.assembler.FormaPagamentoInputDisassembler;
 import com.jdsjara.algafood.api.assembler.FormaPagamentoModelAssembler;
@@ -45,7 +48,24 @@ public class FormaPagamentoController {
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<FormaPagamentoModel>> listar() {
+	public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+		
+		// Implementação para aplicar o Cache - requisições condicionais com Deep ETags
+		// Desabilitar o ShallowEtagHeaderFilter para o Deep ETags funcionar
+		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+		
+		// Se estiver vazio, nenhuma forma de pagamento: a ETag será zero
+		String eTag = "0";
+		
+		OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
+		
+		if (dataUltimaAtualizacao != null) {
+			// Retorna o número de segundos desde 1970 até a data de atualização
+			eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+		}
+		
+		//
+		
 		List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
 		
 		List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoModelAssembler
@@ -54,7 +74,19 @@ public class FormaPagamentoController {
 		// Habilitando o cache com o cabeçalho Cache-Control e a diretiva max-age
 		// Pode testar com uma extensão de browser TALEND API TESTER
 		return ResponseEntity.ok()
-				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				
+				// Default é cachePublic()
+				//.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+				
+				// Esta diretiva indica que responses seja apenas para usuário único 
+				// e não deva ser armazenada em um Shared Cache.
+				//.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+				
+				// Esta diretiva informa que nenhum cache deverá armazenar o response
+				// não importando se é um cache local ou se é um cache compartilhado
+				//.cacheControl(CacheControl.noStore())
+				
+				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
 				.body(formasPagamentosModel);
 	}
 	
