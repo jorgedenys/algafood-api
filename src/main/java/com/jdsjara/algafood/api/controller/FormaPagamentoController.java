@@ -52,19 +52,23 @@ public class FormaPagamentoController {
 		
 		// Implementação para aplicar o Cache - requisições condicionais com Deep ETags
 		// Desabilitar o ShallowEtagHeaderFilter para o Deep ETags funcionar
+		/*
 		ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 		
 		// Se estiver vazio, nenhuma forma de pagamento: a ETag será zero
 		String eTag = "0";
 		
 		OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getDataUltimaAtualizacao();
-		
 		if (dataUltimaAtualizacao != null) {
 			// Retorna o número de segundos desde 1970 até a data de atualização
 			eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
 		}
 		
-		//
+		// Fiz a consulta e não mudou nada. Não preciso continuar o processamento.
+		if (request.checkNotModified(eTag)) {
+			return null;
+		}
+		*/
 		
 		List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
 		
@@ -87,6 +91,7 @@ public class FormaPagamentoController {
 				//.cacheControl(CacheControl.noStore())
 				
 				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+				//.eTag(eTag)
 				.body(formasPagamentosModel);
 	}
 	
